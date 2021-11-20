@@ -22,7 +22,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   networks: {
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY}`],
+      accounts: [`${process.env.DEPLOYER_SIGNER_PRIVATE_KEY}`],
     },
   },
 };
