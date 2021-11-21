@@ -72,17 +72,17 @@ describe("TicketSea Contract", () => {
           base64JSON,
           "base64"
         ).toString("ascii");
-        console.log(stringifiedMetadata);
+  
         const metadata = JSON.parse(stringifiedMetadata);
         
-        /*
+        
         expect(metadata).to.have.all.keys(
                 "eventOwner",
                 "eventName",
                 "refCod",
                 "maxSupply"
         );
-        */
+        
       });
     });
 });
