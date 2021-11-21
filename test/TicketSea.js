@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 describe("TicketSea Contract", () => {
 
@@ -8,13 +9,32 @@ describe("TicketSea Contract", () => {
         { refCod = "ef20"} = {}
     ) => {
 
-        const [owner] = await ethers.getSigners();
+        const [owner, a, b] = await ethers.getSigners();
         const TicketSea = await ethers.getContractFactory("TicketSea");
         const deployed = await TicketSea.deploy(maxSupply, eventName, refCod);
 
         return {
-        owner,
-        deployed,
+          owner,
+          a,
+          b,
+          deployed,
+        };
+    };
+
+    const createNFT = async () => {
+      const { owner, a, b, deployed } = await setup();
+        const tokenId = 0;
+
+        await deployed.mint();
+        const ownerOfMinted = await deployed.ownerOf(0);
+        expect(ownerOfMinted).to.equal(owner.address);
+
+        return{
+          owner,
+          a,
+          b,
+          deployed,
+          tokenId,
         };
     };
     describe("Deployment", () => {
@@ -31,7 +51,7 @@ describe("TicketSea Contract", () => {
     });
     describe("Minting", () => {
         it("Mints a new token and assigns to owner", async () => {
-            const { owner, deployed } = await setup();
+            const { owner, a, b, deployed } = await setup();
         
             await deployed.mint();
             const ownerOfMinted = await deployed.ownerOf(0);
@@ -60,7 +80,7 @@ describe("TicketSea Contract", () => {
       });
     describe("tokenURI", () => {
       it("returns valid metadata", async () => {
-        const { owner, deployed } = await setup();
+        const { owner, a, b, deployed } = await setup();
         await deployed.mint();
         
         const tokenURI = await deployed.tokenURI(0);
@@ -83,6 +103,21 @@ describe("TicketSea Contract", () => {
                 "maxSupply"
         );
         
+      });
+    });
+    describe("Transfer", () => {
+      it("Tranfers a token to a new owner", async () => {
+        
+        const { owner, a, b, deployed, tokenId } = await createNFT();
+        
+        deployed.transferFrom(
+          owner.address,
+          a.address,
+          tokenId
+        );
+
+        const newOwner = await deployed.ownerOf(0);
+        expect(newOwner).to.equal(a.address);
       });
     });
 });
