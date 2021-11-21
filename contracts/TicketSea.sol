@@ -51,7 +51,7 @@ contract TicketSea is ERC721, ERC721Enumerable {
             params = string(
                 abi.encodePacked(
                     "eventOwner",
-                    eventOwner,
+                    uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
                     "&eventName=",
                     eventName,
                     "&ticketRefCod=",
@@ -62,7 +62,6 @@ contract TicketSea is ERC721, ERC721Enumerable {
 
         return params;
     }
-
     function image() public view returns (string memory) {
         string memory baseURI = _baseURI();
         string memory paramsURI = _paramsURI();
@@ -88,13 +87,13 @@ contract TicketSea is ERC721, ERC721Enumerable {
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"eventOwner": ',
-                        eventOwner,
-                        '", "eventName": ',
+                        '{"eventOwner": "',
+                        uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
+                        '", "eventName": "',
                         eventName,
-                        '", "refCod": ',
+                        '", "refCod": "',
                         refCod,
-                        '", "maxSupply": ',
+                        '", "maxSupply": "',
                         maxSupply.toString(),
                         '"}'
                     )
