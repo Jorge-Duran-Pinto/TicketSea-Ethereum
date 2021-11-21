@@ -37,8 +37,8 @@
       ]
     },
     "/home/dur4n/blockchain/ethereum/ticketSeaV1/contracts/TicketSea.sol": {
-      "lastModificationDate": 1637450695527,
-      "contentHash": "f23ea2d4fa9b4be0126b0677e8473b99",
+      "lastModificationDate": 1637452570727,
+      "contentHash": "5a689d02c7655613f2a4bee15ab04234",
       "sourceName": "contracts/TicketSea.sol",
       "solcConfig": {
         "version": "0.8.4",

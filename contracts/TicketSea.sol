@@ -14,13 +14,20 @@ contract TicketSea is ERC721, ERC721Enumerable {
 
     Counters.Counter private _idCounter;
     uint256 public maxSupply;
-    address private _eventOwner;
-    string private _eventName;
-    string private _refCod; 
+    address public eventOwner;
+    string public eventName;
+    string public refCod; 
 
     // constructor
-    constructor(uint256 _maxSupply) ERC721("TicketSea", "TSA") {
+    constructor(
+        uint256 _maxSupply,
+        string memory _eventName,
+        string memory _refCod
+    ) ERC721("TicketSea", "TSA") {
+        eventOwner = msg.sender;
         maxSupply = _maxSupply;
+        eventName = _eventName;
+        refCod = _refCod;
     }
 
     // mint
@@ -44,11 +51,11 @@ contract TicketSea is ERC721, ERC721Enumerable {
             params = string(
                 abi.encodePacked(
                     "eventOwner",
-                    _eventOwner,
+                    eventOwner,
                     "&eventName=",
-                    _eventName,
+                    eventName,
                     "&ticketRefCod=",
-                    _refCod
+                    refCod
                 )
             );
         }
@@ -81,10 +88,14 @@ contract TicketSea is ERC721, ERC721Enumerable {
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "TicketSea #',
-                        tokenId.toString(),
-                        '", "description": "TicketSea provide ticket for events", "image": "',
-                        image,
+                        '{"eventOwner": ',
+                        eventOwner,
+                        '", "eventName": ',
+                        eventName,
+                        '", "refCod": ',
+                        refCod,
+                        '", "maxSupply": ',
+                        maxSupply.toString(),
                         '"}'
                     )
                 )
