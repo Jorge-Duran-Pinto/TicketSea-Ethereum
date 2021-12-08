@@ -17,10 +17,6 @@ contract TicketSea is ERC721, ERC721Enumerable {
     uint256 public maxSupply;
     mapping(uint256 => TicketMetadata) public tokenMetadata;
 
-    //TODO we cant set this properties like this. We must have a global data
-    // so i need to create a mapping (tokenID, a struct tokenMetada)
-    //TODO i need getters for my metadata
-
     // metadaStruct
     struct TicketMetadata {
         address eventOwner;
@@ -63,13 +59,10 @@ contract TicketSea is ERC721, ERC721Enumerable {
                 abi.encodePacked(
                     "eventOwner",
                     uint256(uint160(address(tokenMetadata[tokenId].eventOwner))).toString(),
-                    //uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
                     "&eventName=",
                     tokenMetadata[tokenId].eventName,
-                    //eventName,
                     "&ticketRefCod=",
                     tokenMetadata[tokenId].refCod
-                    //refCod
                 )
             );
         }
@@ -102,14 +95,11 @@ contract TicketSea is ERC721, ERC721Enumerable {
                 string(
                     abi.encodePacked(
                         '{"eventOwner": "',
-                        uint256(uint160(address(tokenMetadata[tokenId].eventOwner))).toString(),
-                        //uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
+                        uint256(uint160(address(tokenMetadata[tokenId].eventOwner))).toString(),                
                         '", "eventName": "',
-                        tokenMetadata[tokenId].eventName,
-                        //eventName,
+                        tokenMetadata[tokenId].eventName,                        
                         '", "refCod": "',
-                        tokenMetadata[tokenId].refCod,
-                        //refCod,
+                        tokenMetadata[tokenId].refCod,                        
                         '", "maxSupply": "',
                         maxSupply.toString(),
                         '"}'
