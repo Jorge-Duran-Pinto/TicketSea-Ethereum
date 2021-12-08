@@ -37,8 +37,8 @@
       ]
     },
     "/home/dur4n/blockchain/ethereum/ticketSeaV1/contracts/TicketSea.sol": {
-      "lastModificationDate": 1637496264122,
-      "contentHash": "8d24c5ec60a98ce41cbd74e1cef295f0",
+      "lastModificationDate": 1638961211714,
+      "contentHash": "f6e4f7abc4d3559a880dca0f01545745",
       "sourceName": "contracts/TicketSea.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -553,43 +553,6 @@
         "^0.8.0"
       ],
       "artifacts": []
-    },
-    "/home/dur4n/blockchain/ethereum/ticketSeaV1/contracts/Greeter.sol": {
-      "lastModificationDate": 1637449437217,
-      "contentHash": "496da59657d9dc1ad109b4e3333876af",
-      "sourceName": "contracts/Greeter.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Greeter"
-      ]
     },
     "/home/dur4n/blockchain/ethereum/ticketSeaV1/node_modules/hardhat/console.sol": {
       "lastModificationDate": 1637443571797,

@@ -12,38 +12,49 @@ contract TicketSea is ERC721, ERC721Enumerable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
-    Counters.Counter private _idCounter;
+    Counters.Counter private _idTicketCounter;
+    Counters.Counter private _idEventCounter;
     uint256 public maxSupply;
-    address public eventOwner;
-    string public eventName;
-    string public refCod; 
+    mapping(uint256 => TicketMetadata) public tokenMetadata;
+
+    //TODO we cant set this properties like this. We must have a global data
+    // so i need to create a mapping (tokenID, a struct tokenMetada)
+    //TODO i need getters for my metadata
+
+    // metadaStruct
+    struct TicketMetadata {
+        address eventOwner;
+        string eventName;
+        string refCod;
+    }
 
     // constructor
     constructor(
-        uint256 _maxSupply,
-        string memory _eventName,
-        string memory _refCod
+        uint256 _maxSupply
     ) ERC721("TicketSea", "TSA") {
-        eventOwner = msg.sender;
         maxSupply = _maxSupply;
-        eventName = _eventName;
-        refCod = _refCod;
     }
 
     // mint
-    function mint() public {
-        uint256 current = _idCounter.current();
-        require(current < maxSupply, "There are no Tickets left :(");
+    function mint(string memory eventName, string memory refCod) public {
+        uint256 currentTicket = _idTicketCounter.current();
+        require(currentTicket < maxSupply, "There are no Tickets left :(");
 
-        _idCounter.increment();
-        _safeMint(msg.sender, current);
+        TicketMetadata memory newTicketMetadata;
+        newTicketMetadata.eventOwner = msg.sender;
+        newTicketMetadata.eventName = eventName;
+        newTicketMetadata.refCod = refCod;
+        tokenMetadata[currentTicket] = newTicketMetadata;
+
+        _idTicketCounter.increment();
+        _safeMint(msg.sender, currentTicket);
     }
 
     function _baseURI() internal pure override returns (string memory) {
         return "https://api.ticketSea.io/";
     }
 
-    function _paramsURI() internal view returns (string memory) {
+    function _paramsURI(uint256 tokenId) internal view returns (string memory) {
         string memory params;
 
         // Params are intentionally scoped to avoid Too Deep Stack error
@@ -51,20 +62,23 @@ contract TicketSea is ERC721, ERC721Enumerable {
             params = string(
                 abi.encodePacked(
                     "eventOwner",
-                    uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
+                    uint256(uint160(address(tokenMetadata[tokenId].eventOwner))).toString(),
+                    //uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
                     "&eventName=",
-                    eventName,
+                    tokenMetadata[tokenId].eventName,
+                    //eventName,
                     "&ticketRefCod=",
-                    refCod
+                    tokenMetadata[tokenId].refCod
+                    //refCod
                 )
             );
         }
 
         return params;
     }
-    function image() public view returns (string memory) {
+    function image(uint256 tokenId) public view returns (string memory) {
         string memory baseURI = _baseURI();
-        string memory paramsURI = _paramsURI();
+        string memory paramsURI = _paramsURI(tokenId);
 
         return string(abi.encodePacked(baseURI, "?", paramsURI));
     }
@@ -81,18 +95,21 @@ contract TicketSea is ERC721, ERC721Enumerable {
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        string memory image = image();
+        string memory image = image(tokenId);
 
         string memory json = Base64.encode(
             bytes(
                 string(
                     abi.encodePacked(
                         '{"eventOwner": "',
-                        uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
+                        uint256(uint160(address(tokenMetadata[tokenId].eventOwner))).toString(),
+                        //uint256(uint160(address(eventOwner))).toString(), // the owner address is in decimal format
                         '", "eventName": "',
-                        eventName,
+                        tokenMetadata[tokenId].eventName,
+                        //eventName,
                         '", "refCod": "',
-                        refCod,
+                        tokenMetadata[tokenId].refCod,
+                        //refCod,
                         '", "maxSupply": "',
                         maxSupply.toString(),
                         '"}'
